@@ -1,23 +1,19 @@
 const db = require('./db')
 const {Airport, Flight} = require('./models')
 
-// const findAllFlights = async() => {
-//   let allFlights = await Flight.find({})
-//   let allAirports = await Airport.find({})
-//   let detailedFlight = allFlights.map(flight => {
-//     allAirports.forEach(airport => {
-//       console.log(`airport: ${airport._id}`)
-//       console.log(`departi: ${flight.departingAirport}`)
-//       // if(new ObjectId(`${airport._id}`) === new ObjectId(`${flight.departingAirport}`)) {
-//       //   console.log('Found match')
-//       //   // flight.airport = airport.name
-//       // } else {
-//       //   console.log('No match')
-//       // }
-//     })
-//     return flight
-//   })
-// }
+const findAllFlights = async() => {
+  let allFlights = await Flight.find({})
+  let allAirports = await Airport.find({})
+  let detailedFlights = allFlights.map(flight => {
+    allAirports.forEach(airport => {
+      if(flight.departingAirport.equals(airport._id)) {
+        flight._doc.airport = airport.name
+      }
+    })
+    return flight
+  })
+  console.log(detailedFlights)
+}
 
 const findFlightByID = async(id) => {
   const flight = await Flight.findById(id)
@@ -89,9 +85,9 @@ async function main() {
   let flightId = '670710aeb3129078276b98e9'
   let airportId = '67070e66ece4c1de19e7e1b3'
   try {
-    // await findAllFlights()
-    await findFlightByID(flightId)
-    await findAirportByID(airportId)
+    await findAllFlights()
+    // await findFlightByID(flightId)
+    // await findAirportByID(airportId)
     // await createFlight(flight)
     // await createAirport(airport)
     // await deleteFlight(flightId)
